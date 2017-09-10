@@ -1,6 +1,6 @@
 
 
-var apiUrl ='https://research-pal.appspot.com/notes';  //'http://research-pal.appspot.com/notes' //'http://localhost:8080/notes' //
+var apiUrl ='http://research-pal.appspot.com/notes'; //'http://research-pal.appspot.com/notes' //'http://localhost:8080/notes' //
 
 
 function getCurrentTabUrl(callback) { //Question: what does callback hear mean?
@@ -28,8 +28,11 @@ function dosubmit(){
   var notes = document.getElementById('notes').value;
   
   getCurrentTabUrl(function(url) {
+
     putNotesData(encodeURIComponent(url),notes, function(errorMessage) {
       //TODO: need to handle error or send back to ui
+        renderStatus("error while put")
+
     });
   });
 

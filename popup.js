@@ -29,10 +29,8 @@ function dosubmit(){
   
   getCurrentTabUrl(function(url) {
 
-    putNotesData(encodeURIComponent(url),notes, function(errorMessage) {
-      //TODO: need to handle error or send back to ui
-        renderStatus("error while put")
-
+    putNotesData(encodeURIComponent(url),encodeURIComponent(notes), function(errorMessage) {
+        renderStatus("save failed!!!", errorMessage)
     });
   });
 
@@ -79,7 +77,7 @@ function getNotesData(searchTerm, errorCallback) {
       errorCallback('No response from API!');
       return;
     }
-    var firstResult = response.Notes;
+    var firstResult = decodeURIComponent(response.Notes);
     document.getElementById('notes').value = firstResult;
 
   };

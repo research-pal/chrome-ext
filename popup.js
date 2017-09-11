@@ -29,7 +29,7 @@ function dosubmit(){
   
   getCurrentTabUrl(function(url) {
 
-    putNotesData(encodeURIComponent(url),encodeURIComponent(notes), function(errorMessage) {
+    putNotesData(encodeURIComponent(url),encodeURIComponent(decodeURIComponent(notes)), function(errorMessage) {
         renderStatus("save failed!!!", errorMessage)
     });
   });

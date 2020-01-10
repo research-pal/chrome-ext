@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+roadmap :::::::::::::::::::::::::::::::::::::::::::::::::::::
+[*********] need to test various scenarios to make sure if the functionality is as expected.
+    for the below scenarios, we should be able to save notes sucessfully and retrieve saved notes on browser refresh
+    [x] new website
+            WORKING
+    [x] existing websire, but a different page. like below
+        https://golang.org/
+        https://golang.org/pkg/
+            WORKING
+    [x] same url but different query parameters. examples below
+        https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox/FMfcgxwGCkfcbpDhLPkljqdKDXKGdzDz
+        https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox/FMfcgxwGCkfcbtkPNCnjjTglwbgXHLSB
+            NOT WORKING
+[**********************] start using this to findout if any improvements are required, and if any bugs are there.
+
+[bug] if there is any url forwards, for example, because the url is changes and the server forwards us to a new url, then the old notes is not carried to the new url when we open the extension. need to think of how to handle these scenarios
+[****][BUG] after sucessfully saving the notes, the updated notes displayed in the text area is encoded string. this needs to be plain text. however, when the extenwsion is opened again, the updates notes is shown in plain text.
+[feature] need to capture the query parameters of the url aswell.
+    for example: below two urls should be considered different. as of now, both are saved as "https://mail.google.com/mail/u/0/"
+        https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox/FMfcgxwGCkfcbpDhLPkljqdKDXKGdzDz
+        https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox/FMfcgxwGCkfcbtkPNCnjjTglwbgXHLSB
+
+
+

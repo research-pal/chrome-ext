@@ -1,9 +1,8 @@
 {
   "manifest_version": 2,
-
   "name": "Note It! Your Research pal.",
-  "description": "........description goes here ..............",
   "version": "1.0",
+  "description": "handy tool to add your research notes",
 
   "browser_action": {
     "default_icon": "icon.png",

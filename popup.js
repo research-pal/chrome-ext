@@ -1,6 +1,6 @@
 
 
-var apiUrl ='http://research-pal.appspot.com/notes'; //'http://research-pal.appspot.com/notes' //'http://localhost:8080/notes' //
+var apiUrl ='https://research-pal-2.uc.r.appspot.com/notes'; // https://research-pal-2.uc.r.appspot.com //'http://research-pal.appspot.com/notes' //'http://localhost:8080/notes' //
 
 
 function getCurrentTabUrl(callback) { //Question: what does callback hear mean?
@@ -50,8 +50,8 @@ function putNotesData(url, notes, errorCallback){
       errorCallback('No response from API!');
       return;
     }
-    var firstResult = response.Notes;
-    document.getElementById('notes').value = firstResult;
+    // var firstResult = response.Notes;
+    // document.getElementById('notes').value = firstResult;
     
   };
   x.onerror = function() {

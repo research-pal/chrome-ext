@@ -1,6 +1,10 @@
 
 
-var apiUrl ='https://research-pal-2.uc.r.appspot.com/notes'; // https://research-pal-2.uc.r.appspot.com //'http://research-pal.appspot.com/notes' //'http://localhost:8080/notes' //
+var apiUrl = 'https://research-pal-2.uc.r.appspot.com/notes' 
+// 'https://research-pal-2.uc.r.appspot.com/notes'  not working
+// 'http://research-pal-2.uc.r.appspot.com/notes'   not working
+// 'http://research-pal.appspot.com/notes'          working
+// 'http://localhost:8080/notes'                    working
 
 
 function getCurrentTabUrl(callback) { //Question: what does callback hear mean?
@@ -42,6 +46,7 @@ function putNotesData(url, notes, errorCallback){
 
   var x = new XMLHttpRequest();
   x.open('PUT', putUrl);
+  // x.setRequestHeader( 'Access-Control-Allow-Origin', '*'); 
   x.responseType = 'json';
   x.onload = function() { // Parse and process the response 
 
@@ -68,7 +73,7 @@ function getNotesData(searchTerm, errorCallback) {
 	
   var x = new XMLHttpRequest();
   x.open('GET', searchUrl);
-  //x.setRequestHeader( 'Access-Control-Allow-Origin', '*'); 
+  // x.setRequestHeader( 'Access-Control-Allow-Origin', '*'); 
   //x.setRequestHeader( 'Content-Type', 'application/json' );
   x.responseType = 'json';
   x.onload = function() { // Parse and process the response 

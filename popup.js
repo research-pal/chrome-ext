@@ -3,7 +3,7 @@
 var apiUrl = 'https://research-pal-2.uc.r.appspot.com/notes' 
 // 'https://research-pal-2.uc.r.appspot.com/notes'  not working
 // 'http://research-pal-2.uc.r.appspot.com/notes'   not working
-// 'http://research-pal.appspot.com/notes'          working
+// 'http://research-pal.appspot.com/notes'           not working (golang 1.9 is depricated)
 // 'http://localhost:8080/notes'                    working
 
 
@@ -30,18 +30,53 @@ function getCurrentTabUrl(callback) { //Question: what does callback hear mean?
 
 function dosubmit(){
   var notes = document.getElementById('notes').value;
+  var id = document.getElementById('notesid').value;
   
   getCurrentTabUrl(function(url) {
 
-    putNotesData(encodeURIComponent(url),encodeURIComponent(decodeURIComponent(notes)), function(errorMessage) {
+  if (id === 'undefined'){ 
+     postNotesData(encodeURIComponent(url),encodeURIComponent(decodeURIComponent(notes)), function(errorMessage) {
+        renderStatus("create failed!!!", errorMessage)
+    });
+  }else{
+    updateNotesData(encodeURIComponent(url),encodeURIComponent(decodeURIComponent(notes)),id, function(errorMessage) {
         renderStatus("save failed!!!", errorMessage)
     });
+ }
   });
 
 }
 
 
-function putNotesData(url, notes, errorCallback){
+
+function postNotesData(url, notes, errorCallback){
+ var postUrl = apiUrl;
+
+  var x = new XMLHttpRequest();
+  x.open('POST', postUrl);
+  // x.setRequestHeader( 'Access-Control-Allow-Origin', '*'); 
+  x.responseType = 'json';
+  x.onload = function() { // Parse and process the response 
+
+    var response = x.response;
+    if (!response) { 
+      errorCallback('No response from API!');
+      return;
+    }
+    // var firstResult = response.Notes;
+    // document.getElementById('notes').value = firstResult;
+    
+  };
+  x.onerror = function() {
+    errorCallback('Network error.');
+  };
+  var body = '[{"url":"'+url+'","notes":"'+notes+'"}]';
+  x.send(body);
+  renderStatus("create successfully"); // TODO: need to check for the status /response of send to determine if the update is sucessful or not
+}
+
+
+function updateNotesData(url, notes, id, errorCallback){
   var putUrl = apiUrl;
 
   var x = new XMLHttpRequest();
@@ -62,9 +97,9 @@ function putNotesData(url, notes, errorCallback){
   x.onerror = function() {
     errorCallback('Network error.');
   };
-  var body = '{"URL":"'+url+'","Notes":"'+notes+'"}';
+  var body = '{"id":'+id+',"url":"'+url+'","notes":"'+notes+'"}';
   x.send(body);
-  renderStatus("saved successfully");
+  renderStatus("updated successfully"); // TODO: need to check for the status /response of send to determine if the update is sucessful or not
 }
 
 
@@ -82,8 +117,13 @@ function getNotesData(searchTerm, errorCallback) {
       errorCallback('No response from API!');
       return;
     }
-    var firstResult = decodeURIComponent(response.Notes);
+    if (response.length ===0){
+       errorCallback('No response from API!');
+      return;
+    }
+    var firstResult = decodeURIComponent(response[0].Notes);
     document.getElementById('notes').value = firstResult;
+    document.getElementById('notesid').value = response[0].ID;
 
   };
   x.onerror = function() {
@@ -103,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() { //Question: what is t
     renderStatus(url);
     renderStatus(encodeURIComponent(url));
     getNotesData(encodeURIComponent(url), function(errorMessage) {
-      //TODO: need to handle error
+      renderStatus(errorMessage);
     });
   });
 

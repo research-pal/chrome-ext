@@ -30,16 +30,16 @@ function getCurrentTabUrl(callback) { //Question: what does callback hear mean?
 
 function dosubmit(){
   var notes = document.getElementById('notes').value;
-  var id = document.getElementById('notesid').value;
+  var id = document.getElementById('notesid').value; //TODO: need a better way to store/retrieve the ID instead of in the html field
   
   getCurrentTabUrl(function(url) {
 
-  if (id === 'undefined'){ 
-     postNotesData(encodeURIComponent(url),encodeURIComponent(decodeURIComponent(notes)), function(errorMessage) {
+  if (id === undefined){ 
+     postNotesData(encodeURIComponent(url),encodeURIComponent(notes), function(errorMessage) {
         renderStatus("create failed!!!", errorMessage)
     });
   }else{
-    updateNotesData(encodeURIComponent(url),encodeURIComponent(decodeURIComponent(notes)),id, function(errorMessage) {
+    updateNotesData(encodeURIComponent(url),encodeURIComponent(notes),id, function(errorMessage) {
         renderStatus("save failed!!!", errorMessage)
     });
  }
@@ -60,7 +60,8 @@ function postNotesData(url, notes, errorCallback){
 
     var response = x.response;
     if (!response) { 
-      errorCallback('No response from API!');
+
+      errorCallback('No response from POST API!');
       return;
     }
     // var firstResult = response.Notes;
@@ -70,41 +71,39 @@ function postNotesData(url, notes, errorCallback){
   x.onerror = function() {
     errorCallback('Network error.');
   };
-  var body = '[{"url":"'+url+'","notes":"'+notes+'"}]';
+  var body = '[{"url":"'+url+'","notes":"'+notes+'", "status":"new"}]';
   x.send(body);
   renderStatus("create successfully"); // TODO: need to check for the status /response of send to determine if the update is sucessful or not
 }
 
 
 function updateNotesData(url, notes, id, errorCallback){
-  var putUrl = apiUrl;
+  var patchUrl = apiUrl+"/"+id
 
   var x = new XMLHttpRequest();
-  x.open('PUT', putUrl);
+  x.open('PATCH', patchUrl);
   // x.setRequestHeader( 'Access-Control-Allow-Origin', '*'); 
   x.responseType = 'json';
   x.onload = function() { // Parse and process the response 
-
     var response = x.response;
     if (!response) { 
-      errorCallback('No response from API!');
+      errorCallback('No response from PATCH API!');
       return;
     }
     // var firstResult = response.Notes;
     // document.getElementById('notes').value = firstResult;
-    
   };
   x.onerror = function() {
     errorCallback('Network error.');
   };
-  var body = '{"id":'+id+',"url":"'+url+'","notes":"'+notes+'"}';
+  var body = '{"notes":"'+notes+'"}';
   x.send(body);
   renderStatus("updated successfully"); // TODO: need to check for the status /response of send to determine if the update is sucessful or not
 }
 
 
 function getNotesData(searchTerm, errorCallback) {
-  var searchUrl = apiUrl + '?encodedurl='+searchTerm;
+  var searchUrl = apiUrl + '?url='+searchTerm;
 	
   var x = new XMLHttpRequest();
   x.open('GET', searchUrl);
@@ -113,17 +112,19 @@ function getNotesData(searchTerm, errorCallback) {
   x.responseType = 'json';
   x.onload = function() { // Parse and process the response 
     var response = x.response;
-    if (!response) { 
-      errorCallback('No response from API!');
-      return;
-    }
-    if (response.length ===0){
-       errorCallback('No response from API!');
-      return;
-    }
-    var firstResult = decodeURIComponent(response[0].Notes);
-    document.getElementById('notes').value = firstResult;
-    document.getElementById('notesid').value = response[0].ID;
+    // // enable this when debugging an issue
+    // if (!response) { 
+    //   errorCallback('No response from GET API!');
+    //   //document.getElementById('postButton').value="Create"
+    //   return;
+    // }
+    // if (response.length ===0){
+    //    errorCallback('Zero response from API!');
+    //   return;
+    // }
+
+    document.getElementById('notes').value = decodeURIComponent(response[0].notes);
+    document.getElementById('notesid').value = response[0].id;
 
   };
   x.onerror = function() {
@@ -140,8 +141,8 @@ function renderStatus(statusText) {
 document.addEventListener('DOMContentLoaded', function() { //Question: what is the significance of this pattern of calling function in nested manner in javascript?
   getCurrentTabUrl(function(url) {
     
-    renderStatus(url);
-    renderStatus(encodeURIComponent(url));
+    //renderStatus(url);
+    //renderStatus(encodeURIComponent(url));
     getNotesData(encodeURIComponent(url), function(errorMessage) {
       renderStatus(errorMessage);
     });

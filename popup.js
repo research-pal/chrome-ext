@@ -99,6 +99,7 @@ function updateNotesData(url, notes, id, errorCallback){
   var body = '{"notes":"'+notes+'"}';
   x.send(body);
   renderStatus("updated successfully"); // TODO: need to check for the status /response of send to determine if the update is sucessful or not
+
 }
 
 
@@ -135,6 +136,7 @@ function getNotesData(searchTerm, errorCallback) {
 
 function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
+  setTimeout(function(){ document.getElementById('status').textContent = ""; }, 60000); 
 }
 
 
